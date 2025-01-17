@@ -1,0 +1,71 @@
+#include<stdio.h>
+
+void initialize(int vertices , int(*graph)[vertices])
+{
+    printf("enter graph vertices : ");
+    for(int i=1;i<vertices;i++)
+    {
+        for(int j =1; j< vertices;j++)
+        {
+            graph[i][j]=0;
+        }
+    }
+    graph[0][0]=0;
+    for(int i=1;i<vertices;i++)
+    {
+        scanf("%d",&graph[0][i]);
+        graph[i][0]=graph[0][i];
+    }
+}
+
+void find_index(int v ,int (*graph)[v],int src,int desti,int*s_i,int*d_i)
+{
+   for(int i=1;i<v;i++)
+   {
+     if(graph[0][i]==desti)
+     *d_i= i;
+     if(graph[0][i]==src)
+     *s_i=i;
+   }
+}
+
+void display(int vertices , int(*graph)[vertices])
+{
+    for(int i=0;i<vertices;i++)
+    {
+        for(int j=0;j<vertices;j++)
+        {
+            if(i==0&&j==0)
+           printf("  ");
+            else
+             printf("%d ",graph[i][j]);
+            
+        }
+        printf("\n");
+    }
+}
+
+int main()
+{
+    int vertices;
+    printf("vertices : ");
+    scanf("%d",&vertices);
+    
+    int graph[vertices+1][vertices+1];
+    initialize(vertices+1,graph);
+
+    int edges;
+    printf("enter number of edges : ");
+    scanf("%d",&edges);
+    int source,destination;
+    int src_index,desti_index,weight;
+    for(int i=0;i<edges;i++)
+    {
+        printf("enter edges in format(source destination) wight: ");
+        scanf("%d%d%d",&source,&destination,&weight);
+        find_index(vertices+1,graph,source,destination,&src_index,&desti_index);
+        graph[src_index][desti_index]=weight;
+        graph[desti_index][src_index]=weight;
+    }
+    display(vertices+1,graph);
+}
