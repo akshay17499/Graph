@@ -1,0 +1,112 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct node
+{
+    struct node*next;
+    int desti;
+    int weight;
+}node;
+
+typedef struct graph
+{
+    node**adj_list;
+    int*vertices;
+    int total_vertices;
+}Graph;
+
+node*create_node(int desti,int weight)
+{
+    node*new = malloc(sizeof(node));
+    new->desti = desti;
+    new->weight = weight;
+    new->next = NULL;
+    return new;
+}
+
+Graph*create_adj_list(int total_vertices)
+{
+    Graph*new = malloc(sizeof(Graph));
+    new->adj_list = malloc(sizeof(node*)*total_vertices);
+    for(int i=0;i<total_vertices;i++)
+    new->adj_list[i]=NULL;
+    new->vertices = malloc(sizeof(int)*total_vertices);
+    printf("enter vertices : ");
+    for(int i=0;i<total_vertices;i++)
+    scanf("%d",&new->vertices[i]);
+    new->total_vertices = total_vertices;
+    return new;
+}
+
+void add_vertices(Graph*adjList,int source,int destination ,int weight,int isDirected)
+{
+    node*new = create_node(destination,weight);
+    for(int i=0;i<adjList->total_vertices;i++)
+    {
+        if(adjList->vertices[i]==source)
+        {
+           new->next = adjList->adj_list[i];
+           adjList->adj_list[i] = new; 
+        }
+        if((!isDirected)&&adjList->vertices[i]==destination)          //if directed value has to be 1
+        {
+            node*new_1 = create_node(source,weight);
+            new_1->next = adjList->adj_list[i];
+            adjList->adj_list[i] = new_1;
+        }
+    }
+}
+
+void display(Graph*adjList)
+{
+    for(int i=0;i<adjList->total_vertices;i++)
+    {
+        printf("%d : ",adjList->vertices[i]);
+        node*temp = adjList->adj_list[i];
+        while(temp)
+        {
+            printf("%d(w:%d)->",temp->desti,temp->weight);
+            temp=temp->next;
+            if(temp==NULL)
+            printf("NULL");
+        }
+        printf("\n");
+    }
+}
+
+int main()
+{
+    printf("enter number of vertice : ");
+    int vertices;
+    scanf("%d",&vertices);
+    Graph*adjList = create_adj_list(vertices);
+
+     int isWeighted;
+     printf(" is the graph contains weight (1 for yes / 0 for no) : ");
+     scanf("%d",&isWeighted);
+
+     int isDirected;
+     printf(" is the graph directed (1 for yes / 0 for no) : ");
+     scanf("%d",&isDirected);
+
+     int edges;
+     printf("number of edges : ");
+     scanf("%d",&edges);
+     int source,desti,weight;
+     for(int i=0;i<edges;i++)
+     {
+        printf("enter the edges in format (source desti");
+        if(isWeighted)
+        printf(" weight");
+        printf(") : ");
+        if(isWeighted)
+        scanf("%d%d%d",&source,&desti,&weight);
+        else
+        {
+            scanf("%d%d",&source,&desti);
+            weight=1;
+        }
+        add_vertices(adjList,source,desti,weight,isDirected);
+     }
+     display(adjList);
+}
