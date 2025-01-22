@@ -1,0 +1,42 @@
+int find_next(bool*arr)
+{
+    for(int i =0;i<202;i++)
+    {
+        if(!arr[i]&&flag==0)
+        return i;
+    }
+    return 0;
+}
+int findCircleNum(int** isConnected, int csize, int* isConnectedColSize) 
+{
+    int queue[200];
+    int rear=0;
+    int front=0;
+    bool visited[202]= {false};
+    int colsize = * isConnectedColSize;
+    int size=0;
+    int count=0;
+    while(size<csize)
+    {
+        count++;
+        int i_index = find_next(visited);
+         front=0;
+         rear=0;
+          visited[i_index] = true;
+         queue[rear++] = i_index;
+        while(front<rear)
+        {
+            size++;
+            int index = queue[front++];
+            for(int i=0;i<colsize;i++)
+            {
+                if(isConnected[index][i]>0&&!visited[i])
+                {
+                   visited[i] = true;
+                   queue[rear++] = i;
+                }
+            }
+        }
+    }
+return count;
+}
