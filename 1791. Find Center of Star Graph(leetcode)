@@ -1,0 +1,16 @@
+int findCenter(int** edges, int size, int* edgesColSize) {
+   int center;
+   bool arr[100000] = {0};
+   for(int i=0;i<size;i++)
+   {
+        if(arr[edges[i][0]]==false)
+       arr[edges[i][0]]=true;
+       else
+       return edges[i][0];
+        if(arr[edges[i][1]]==false)
+       arr[edges[i][1]]=true;
+       else
+       return edges[i][1];  
+   }
+   return 0;
+}
