@@ -1,0 +1,93 @@
+#include<stdio.h>
+#include<stdbool.h>
+#include<limits.h>
+
+int find_min(int*distance,bool* visited,int size)
+{
+    int min_i =-1;
+    for(int i=0;i<size;i++)
+    {
+        if(!visited[i]&&(min_i==-1||distance[min_i]>distance[i]))
+        {
+            min_i = i;
+        }
+    }
+    return min_i;
+}
+
+void find_shortest_path(int v,int(*graph)[v],int start)
+{
+    int distance[v];
+    bool visited[v];
+    for(int i=0;i<v;i++)
+    {
+        distance[i] = INT_MAX;
+        visited[i] = false;
+    }
+    distance[start]=0;
+    for(int i=0;i<v-1;i++)
+    {
+        int min_index = find_min(distance,visited,v);
+        visited[min_index]=true;
+        printf("%d \n",min_index);
+        for(int j = 0;j<v;j++)
+        {
+           if(graph[min_index][j]&&!visited[j])
+           {
+             int t_distance = distance[min_index] + graph[min_index][j];
+             if(distance[j]>t_distance)
+             {
+                distance[j] = t_distance;
+             } 
+           }
+        }
+    }
+    for(int i=0;i<v;i++)
+    {
+        printf("%d ",distance[i]);
+    }
+}
+
+
+
+int main()
+{
+    int vertices;
+    printf("enter no vertices : ");
+    scanf("%d",&vertices);
+
+    int graph[vertices][vertices];
+    for(int i=0;i<vertices;i++)
+    {
+        for(int j=0;j<vertices;j++)
+        {
+            graph[i][j]=0;
+        }
+    }
+    
+    int edges;
+    printf("no of edges : ");
+    scanf("%d",&edges);
+    int src,desti,weight;
+    for(int i=0;i<edges;i++)
+    {
+        printf("enter source desti weight : ");
+        scanf("%d%d%d",&src,&desti,&weight);
+        graph[src][desti] = weight;
+        graph[desti][src] = weight;
+    }
+    printf("from where to start : ");
+    int start;
+    scanf("%d",&start);
+
+    find_shortest_path(vertices,graph,start);
+    //display graph;
+    //  for(int i=0;i<vertices;i++)
+    // {
+    //     for(int j=0;j<vertices;j++)
+    //     {
+    //         printf("%d ",graph[i][j]);
+    //     }
+    //     printf("\n");
+    // }
+}
