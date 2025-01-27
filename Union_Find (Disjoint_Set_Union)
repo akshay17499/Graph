@@ -1,0 +1,78 @@
+#include<stdio.h>
+#define MAX 100
+#include<stdlib.h>
+int find(int*parent,int x)
+{
+    if(parent[x]!=x)
+    {
+        parent[x] = find(parent,parent[x]);
+    }
+    return parent[x];
+}
+
+void union_set(int*parent,int*rank,int u,int v)
+{
+    int root_x = find(parent,u);
+    int root_y = find(parent,v);
+    if(root_x!=root_y)
+    {
+        if(rank[root_x]>rank[root_y])
+        {
+            parent[root_y] = root_x;
+            rank[root_x] += rank[root_y]; 
+        }
+        else if(rank[root_y]>rank[root_x])
+        {
+            parent[root_x] = root_y;
+            rank[root_y] += rank[root_x]; 
+        } 
+        else{
+            parent[root_y] = root_x;
+            rank[root_x]++;
+        }
+    }
+}
+
+
+int*find_redundant_connection(int(*arr)[2],int edges)
+{
+    int parent[MAX];
+    int rank[MAX];
+    for(int i=0;i<MAX;i++)
+    {
+        parent[i]=i;
+        rank[i]=0;
+    }
+    int*return_arr = malloc(sizeof(int)*2);
+    for(int i=0;i<edges;i++)
+    {
+        int u = arr[i][0];
+        int v = arr[i][1];
+
+        if(find(parent,u)==find(parent,v))
+        {
+           return_arr[0] = u;
+           return_arr[1] = v;
+        }
+        else{
+          union_set(parent,rank,u,v);
+        }
+    }
+    return return_arr;
+}
+
+
+int main()
+{
+    int edges;
+    printf("enter number of edges : ");
+    scanf("%d",&edges);
+
+    int arr[edges][2];
+    printf("enter edges in format (src , desti) : ");
+    for(int i=0;i<edges;i++)
+    {
+        scanf("%d%d",&arr[i][0],&arr[i][1]);
+    }
+    int*ptr = find_redundant_connection(arr,edges);
+}
