@@ -1,0 +1,83 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<limits.h>
+#include<stdbool.h>
+#define MAX 100
+typedef struct node
+{
+    int v;
+    int count;
+    int distance;
+}node;
+
+int find_short(int (*arr)[3],int v,int src,int desti,int k)
+{
+    node queue[MAX];
+    int path[k];
+    int j=0;
+    int front = 0;
+    int rear = 0;
+    int graph[v][v];
+    int t_src,t_dest;
+    bool visited[MAX]={false};
+    for(int i=0;i<v;i++)
+    {
+        for(j=0;j<v;j++)
+        graph[i][j] =0;
+    }
+    for(int i=0;i<v;i++)
+    {
+      graph[arr[i][0]][arr[i][1]] = arr[i][2];
+    }
+    queue[rear].v = src;
+    queue[rear].count =0;
+    queue[rear++].distance = 0;
+    int shortest=INT_MAX;
+    while(front<rear)
+    {
+        int val = queue[front].v;
+        int count = queue[front].count;
+        int dis = queue[front++].distance;
+        visited[val] = true;
+        if(val==desti&&count<=k)
+        shortest = shortest<dis?shortest:dis;
+         
+         if(count>k)
+         continue;
+        for(int i=0;i<v;i++)
+        {
+          if(graph[val][i])
+          {
+            queue[rear].v = i;
+             queue[rear].count =count+1;
+             queue[rear++].distance = dis + graph[val][i];
+          }
+        }
+    }
+  return  shortest==INT_MAX?-1:shortest;
+}
+
+int main()
+{
+  int edges;
+  int vertices;
+  printf("enter number of edges : ");
+  scanf("%d",&edges);
+  printf("enter number of vertices : ");
+  scanf("%d",&vertices);
+  int arr[edges][3];
+
+  for(int i=0;i<edges;i++)
+  {
+    printf("enter (src desti weight) : ");
+    scanf("%d%d%d",&arr[i][0],&arr[i][1],&arr[i][2]);
+  }
+  int k;
+  printf("max n.o of stops u want to travel :");
+  scanf("%d",&k);
+  int src,dest;
+  printf("src and desti : ");
+  scanf("%d%d",&src,&dest);
+  int shortest=find_short(arr,vertices,src,dest,k);  
+  printf("shortest distance : %d",shortest);
+}
