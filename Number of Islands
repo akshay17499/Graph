@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<stdbool.h>
+int dirx[4] = {1,-1,0,0};
+int diry[4] = {0,0,1,-1};
+typedef struct node
+{
+    int x;
+    int y;
+}node;
+void  bfs(int row,int col,int src_x,int src_y,int (*arr)[col],bool(*visited)[col])
+{
+   node queue[row*col];
+   int rear=0,front=0;
+   queue[rear].x = src_x;
+   queue[rear++].y = src_y;
+   while(front<rear)
+   {
+     int current_x = queue[front].x;
+     int current_y = queue[front++].y;
+     for(int i=0;i<4;i++)
+     {
+        int new_x = current_x + dirx[i];
+        int new_y = current_y + diry[i];
+        if(new_x>=0&&new_x<row&&new_y>=0&&new_y<col&&!visited[new_x][new_y]&&arr[new_x][new_y])
+        {
+             visited[new_x][new_y]=true;
+             queue[rear].x = new_x;
+             queue[rear++].y=new_y; 
+        }
+     }
+   }
+}
+
+int count_islands(int row,int col ,int(*arr)[col])
+{
+    bool visited[row][col];
+    for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<col;j++)
+        {
+            visited[i][j] = false;
+        }
+    }
+    int count=0;
+     for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<col;j++)
+        {
+            if(!visited[i][j]&&arr[i][j]>0)
+            {
+                visited[i][j] = true;
+                bfs(row,col,i,j,arr,visited);
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+int main()
+{
+    int row ,col;
+    printf("enter row & col : ");
+    scanf("%d%d",&row,&col);
+    int mat[row][col];
+    for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<col;j++)
+        {
+            scanf("%d",&mat[i][j]);
+        }
+    }
+    int count=count_islands(row,col,mat);
+   printf("no of islands  =  %d",count);
+}
