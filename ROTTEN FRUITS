@@ -1,0 +1,71 @@
+#include<stdio.h>
+#include<stdbool.h>
+int dirx[] = {0,0,1,-1};
+int diry[] = {-1,1,0,0};
+typedef struct node
+{
+    int x;
+    int y;
+    int time;
+}node;
+
+int  rotten_fruits(int row,int col,int(*arr)[col])
+{
+    node queue[row*col];
+    int rear=0,front=0;
+    int total_fresh=0;
+    for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<col;j++)
+        {
+            if(arr[i][j]==2)
+            {
+                queue[rear].x = i;
+                queue[rear].y = j;
+                queue[rear++].time = 0; 
+            }
+            if(arr[i][j]==1)
+            total_fresh += 1;
+        }
+    }
+    int time;
+    while(front<rear)
+    {
+        int c_x = queue[front].x;
+        int c_y = queue[front].y;
+         time = queue[front++].time;
+        for(int i=0;i<4;i++)
+        {
+            int new_x = c_x + dirx[i];
+            int new_y = c_y + diry[i];
+            if(new_x>=0&&new_x<row&&new_y>=0&&new_y<col&&arr[new_x][new_y]==1)
+            {
+                arr[new_x][new_y]=2;
+                queue[rear].x = new_x;
+                queue[rear].y = new_y;
+                queue[rear++].time = time+1; 
+                total_fresh--;
+            }
+        }
+    }
+    return total_fresh==0?time:-1; 
+    
+}
+
+
+int main()
+{
+    int row ,col;
+    printf("enter row & col : ");
+    scanf("%d%d",&row,&col);
+    int mat[row][col];
+    for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<col;j++)
+        {
+            scanf("%d",&mat[i][j]);
+        }
+    }
+    int time=rotten_fruits(row,col,mat);
+   printf("min time for all fruits to rote  =  %d",time);
+}
