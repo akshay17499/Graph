@@ -1,0 +1,59 @@
+#include<stdio.h>
+#include<stdbool.h>
+int dirx[] = {0,0,1,-1,1,-1,1,-1};
+int diry[] = {-1,1,0,0,1,-1,-1,1};
+typedef struct node
+{
+    int x;
+    int y;
+    int distance;
+}node;
+
+int binary_matrix_shortest_path(int row,int col,int(*arr)[col])
+{
+    if(arr[0][0]==1||arr[row-1][col-1]==1)
+    return -1;
+   node queue[row*col];
+   int rear=0,front=0;
+   queue[rear].x = 0;
+   queue[rear].y = 0;
+   queue[rear++].distance = 1;
+   while(front<rear)
+   {
+        int c_x = queue[front].x;
+        int c_y = queue[front].y;
+        int dis = queue[front++].distance;
+        if(c_x==row-1&&c_y==col-1)
+        return dis;
+        for(int i=0;i<8;i++)
+        {
+            int new_x = c_x + dirx[i];
+            int new_y = c_y + diry[i];
+            if(new_x>=0&&new_x<row&&new_y>=0&&new_y<col&&arr[new_x][new_y]==0)
+            {
+                arr[new_x][new_y]=1;//mark as visited
+                queue[rear].x = new_x;
+                queue[rear].y = new_y;
+                queue[rear++].distance = dis+1;
+            }
+        }
+   }
+   return -1;
+}
+
+int main()
+{
+    int row ,col;
+    printf("enter row & col : ");
+    scanf("%d%d",&row,&col);
+    int mat[row][col];
+    for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<col;j++)
+        {
+            scanf("%d",&mat[i][j]);
+        }
+    }
+    int distance=binary_matrix_shortest_path(row,col,mat);
+   printf("Total distance  =  %d",distance);
+}
