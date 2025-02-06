@@ -1,0 +1,55 @@
+void bfs(char**arr,int col,bool(*visited)[col],int row,int x,int y)
+{
+   int dirx[]={1,0};
+    int diry[]={0,1};
+    typedef struct node
+    {
+        int x;
+        int y;
+    }node;
+
+    node queue[205];
+    int rear=0,front=0;
+     queue[rear].x=x;
+     queue[rear++].y=y;
+     visited[x][y]=true;
+     while(front<rear)
+     {
+        int t_x = queue[front].x;
+        int t_y = queue[front++].y;
+        for(int i=0;i<2;i++)
+        {
+            int n_x = t_x + dirx[i];
+            int n_y = t_y + diry[i];
+            if(n_x<row&&n_y<col&&arr[n_x][n_y]=='X'&&!visited[n_x][n_y])
+              {
+                queue[rear].x=n_x;
+                queue[rear++].y=n_y;
+                visited[n_x][n_y]=true;
+              }
+        }
+     }
+}
+int countBattleships(char** board, int size, int* bcsize) {
+    bool visited[size][*bcsize];
+    for(int i=0;i<size;i++)
+    {
+        for(int j=0;j<*bcsize;j++)
+        {
+            visited[i][j]=false;
+        }
+    }
+    int count=0;
+     for(int i=0;i<size;i++)
+    {
+        for(int j=0;j<*bcsize;j++)
+        {
+            if(board[i][j]=='X'&&!visited[i][j])
+           {
+            bfs(board,*bcsize,visited,size,i,j);
+            count++;
+           } 
+        }
+    }
+return count;
+}
