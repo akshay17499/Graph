@@ -1,0 +1,52 @@
+typedef struct node
+{
+    int v;
+    int arr[20];
+    int len ;
+}node;
+
+void copy_arr(int*arr1,int*arr2,int size)
+{
+    for(int i=0;i<size;i++)
+    {
+        arr1[i] = arr2[i];
+    }
+}
+
+int** allPathsSourceTarget(int** graph, int size, int* graphColSize, int* returnSize, int** returnColumnSizes) {
+    node queue[900000];
+    int rear=0,front=0;
+    bool visited[20]= {false};
+    int k=0;
+    queue[rear].v =0;
+    queue[rear].len = 1;
+    queue[rear++].arr[k]=0;
+    int**arr = malloc(sizeof(int*)*900000);
+    int j=0;
+    * returnColumnSizes = malloc(sizeof(int)*900000);
+    while(front<rear)
+    {
+      node temp = queue[front++];
+      int len = temp.len;
+      if(temp.v==size-1)
+      {
+        arr[k] = malloc(sizeof(int)*len);
+        (*returnColumnSizes)[k] = len;
+        copy_arr(arr[k],temp.arr,len);
+        k++;
+        continue;
+      }
+      for(int i=0;i<graphColSize[temp.v];i++)
+      {
+        copy_arr(queue[rear].arr,temp.arr,len);
+         
+        queue[rear].v = graph[temp.v][i];
+        queue[rear].len = len+1;
+        queue[rear].arr[len] = graph[temp.v][i];
+         rear++;
+      }
+      j++;
+    }
+    * returnSize = k;
+    return arr; 
+}
