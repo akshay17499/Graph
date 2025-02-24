@@ -1,0 +1,43 @@
+int** generateMatrix(int n, int* returnSize, int** returnColumnSizes) {
+    int**arr = malloc(sizeof(int*)*n);
+    * returnColumnSizes = malloc(sizeof(int)*n);
+    * returnSize = n;
+    for(int i=0;i<n;i++)
+    {
+        (* returnColumnSizes)[i]=n;
+        arr[i]= calloc(n,sizeof(int));
+    }
+    int left = 0,right=n;
+    int down = n,up=0;
+    int t_row=0,t_col=0;
+    int count=1;
+    int count1=1;
+   while(count1<=n*n)
+   {
+     if(t_col<right&&t_row==up)
+      {
+        arr[t_row][t_col++] = count++;
+        if(t_col==right)
+        up++;
+      }
+    else if(t_row<down-1&&t_col==right)
+     {
+        arr[++t_row][t_col-1] = count++;
+        if(t_row==down-1)
+        {right--;t_col--;}
+     }
+     else if(t_col>left&&t_row==down-1)
+     {
+        arr[t_row][--t_col] = count++;
+        if(t_col==left)
+        down--;
+     }
+     else if(t_row>up&&t_col==left){
+      arr[--t_row][t_col] = count++;
+      if(t_row==up)
+      {left++;t_col++;}
+     }
+     count1++;
+   }
+return arr;
+}
